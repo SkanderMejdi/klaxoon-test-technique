@@ -1,0 +1,18 @@
+version:  '3.8'
+services:
+  mysql:
+    image: mysql:8.0.22
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: klaxoon_test
+
+  php:
+    image: klaxoon-api:dev
+    depends_on:
+      - "mysql"
+    volumes:
+      - './:/var/www'
+    env_file:
+      - .env
+    environment:
+      - APP_ENV=test
