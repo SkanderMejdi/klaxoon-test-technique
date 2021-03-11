@@ -21,8 +21,16 @@ database:
 stop:
 	ID_USER=$(ID_USER) ID_GROUP=$(ID_GROUP) docker-compose down --volumes
 
-test:
+functional-test:
 	docker-compose -f docker-compose.test.yml run php vendor/bin/behat -vvv
 
-integration-test:
+unit-test:
+	docker-compose -f docker-compose.test.yml run php vendor/bin/phpunit tests -v
+
+test: functional-test unit-test
+
+integration-functional-test:
 	docker-compose -f docker-compose.integration.yml run php vendor/bin/behat -vvv
+
+integration-unit-test:
+	docker-compose -f docker-compose.integration.yml run php vendor/bin/phpunit tests -v

@@ -15,5 +15,8 @@ jobs:
         run: make build init
 
       - name: Launch functional-tests
-        run: make integration-test
+        run: make integration-functional-test
+
+      - name: Launch unit-tests
+        run: make integration-unit-test
 
