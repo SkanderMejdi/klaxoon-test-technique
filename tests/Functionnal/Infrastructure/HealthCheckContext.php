@@ -14,11 +14,9 @@ final class HealthCheckContext implements Context
 {
     const HEALTH_CHECK_PATH = '/healthcheck';
 
-    /** @var Response|null */
-    private $response;
+    private ?Response $response;
 
-    /** @var KernelInterface */
-    private $kernel;
+    private KernelInterface $kernel;
 
     public function __construct(KernelInterface $kernel)
     {
@@ -26,9 +24,9 @@ final class HealthCheckContext implements Context
     }
 
     /**
-     * @When I want to check the health of my application
+     * @When I check the health of my application
      */
-    public function aDemoScenarioSendsARequestTo(): void
+    public function whenICyheckTheHealthOfMyApplication(): void
     {
         $this->response = $this->kernel->handle(
             Request::create(self::HEALTH_CHECK_PATH, 'GET')
@@ -38,7 +36,7 @@ final class HealthCheckContext implements Context
     /**
      * @Then I know that my application is ok
      */
-    public function theResponseShouldBeReceived(): void
+    public function thenIKnowThatMyApplicationIsOk(): void
     {
         $decodedResponse = \json_decode($this->response->getContent());
         Assert::notEmpty($decodedResponse);

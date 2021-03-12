@@ -4,7 +4,7 @@ on: push
 
 jobs:
   functional-tests:
-    name: Functional tests
+    name: Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -15,5 +15,8 @@ jobs:
         run: make build init
 
       - name: Launch functional-tests
-        run: make integration-test
+        run: make integration-functional-test
+
+      - name: Launch unit-tests
+        run: make integration-unit-test
 

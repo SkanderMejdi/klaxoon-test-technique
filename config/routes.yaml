@@ -1,3 +1,7 @@
 healthcheck:
     path: /healthcheck
     controller: App\Infrastructure\HealthCheck\HealthCheckController
+
+bookmarks:
+    path: /bookmarks
+    controller: App\Infrastructure\Bookmark\BookmarkController::list

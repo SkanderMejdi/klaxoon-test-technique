@@ -16,13 +16,24 @@ composer:
 	$(PHP_EXEC) composer install
  
 database:
-	$(PHP_EXEC) bin/console doctrine:schema:update
+	$(PHP_EXEC) bin/console doctrine:migrations:migrate
+
+create-migration:
+	$(PHP_EXEC) bin/console doctrine:migrations:generate
 
 stop:
-	ID_USER=$(ID_USER) ID_GROUP=$(ID_GROUP) docker-compose down --volumes
+	ID_USER=$(ID_USER) ID_GROUP=$(ID_GROUP) docker-compose down --volumes --remove-orphans 
 
-test:
-	docker-compose -f docker-compose.test.yml run php vendor/bin/behat -vvv
+functional-test:
+	docker-compose -f docker-compose.test.yml run --rm php ./wait-for postgres_test:5432 -- vendor/bin/behat -vv
 
-integration-test:
-	docker-compose -f docker-compose.integration.yml run php vendor/bin/behat -vvv
+unit-test:
+	docker-compose -f docker-compose.test.yml run --rm php ./wait-for postgres_test:5432 -- vendor/bin/phpunit tests -v
+
+test: functional-test unit-test
+
+integration-functional-test:
+	docker-compose -f docker-compose.integration.yml run --rm php ./wait-for postgres_test:5432 -- vendor/bin/behat -vvv
+
+integration-unit-test:
+	docker-compose -f docker-compose.integration.yml run --rm php ./wait-for postgres_test:5432 -- vendor/bin/phpunit tests -v
