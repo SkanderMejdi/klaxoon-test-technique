@@ -3,6 +3,7 @@ default:
         default:
             contexts:
                 - App\Tests\Functionnal\Infrastructure\HealthCheckContext
+                - App\Tests\Functionnal\Infrastructure\BookmarkContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension: null

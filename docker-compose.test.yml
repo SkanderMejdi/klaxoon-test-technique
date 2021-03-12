@@ -1,18 +1,19 @@
 version:  '3.8'
 services:
-  mysql:
-    image: mysql:8.0.22
+  postgres_test:
+    image: postgres:13.2-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: klaxoon_test
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: klaxoon_test
 
   php:
     image: klaxoon-api:dev
     depends_on:
-      - "mysql"
+      - "postgres_test"
     volumes:
       - './:/var/www'
     env_file:
-      - .env
+      - .env.test
     environment:
       - APP_ENV=test

@@ -6,6 +6,8 @@ use Embed\Extractor;
 
 final class Bookmark 
 {
+    public const DATE_FORMAT = 'Y-m-d H:i:s';
+
     private string $url;
 
     private ?string $title;
@@ -36,6 +38,19 @@ final class Bookmark
         );
     }
 
+    static public function fromArray(array $array): self
+    {
+        return new Bookmark(
+            $array['url'],
+            $array['title'],
+            $array['author'],
+            $array['date_added']
+            ? \DateTime::createFromFormat(
+                self::DATE_FORMAT, $array['date_added']
+            ) : null
+        );
+    }
+
     public function getUrl(): string
     {
         return $this->url;
@@ -54,5 +69,17 @@ final class Bookmark
     public function getDateAdded(): ?\DateTime
     {
         return $this->dateAdded;
+    }
+
+    public function serialize(): array
+    {
+        return [
+            'url' => $this->url,
+            'title' => $this->title,
+            'author' => $this->author,
+            'date_added' => $this->dateAdded
+                ? $this->dateAdded->format(\DateTimeInterface::ATOM)
+                : null,
+        ];
     }
 }
