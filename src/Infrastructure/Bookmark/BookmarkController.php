@@ -5,6 +5,7 @@ namespace App\Infrastructure\Bookmark;
 use App\Domain\Bookmark\Bookmark;
 use App\Domain\Bookmark\BookmarkRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class BookmarkController extends AbstractController
@@ -25,5 +26,14 @@ class BookmarkController extends AbstractController
                 return $bookmark->serialize();
             }, $bookmarks),
         ]);
+    }
+
+    public function add(Request $request): Response
+    {
+        $this->bookmarkRepository->add(
+            Bookmark::fromUrl($request->request->get('url'))
+        );
+
+        return $this->json(['success' => 'true']);
     }
 }

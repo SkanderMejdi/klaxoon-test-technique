@@ -32,7 +32,9 @@ final class BookmarkFaker
             'url' => $this->faker->url(),
             'title' => $this->faker->text(),
             'author' => $this->faker->name(),
-            'date_added' => $this->faker->dateTime()->format(Bookmark::DATE_FORMAT),
+            'date_added' => $this->faker->boolean()
+                ? $this->faker->dateTime()->format(Bookmark::DATE_FORMAT)
+                : null,
             'width' => $this->faker->randomNumber(),
             'height' => $this->faker->randomNumber(),
             'duration' => $this->faker->boolean() ? $this->faker->randomNumber() : null,
@@ -58,7 +60,12 @@ final class BookmarkFaker
             $statment->bindValue(':url', $bookmark->getUrl());
             $statment->bindValue(':title', $bookmark->getTitle());
             $statment->bindValue(':author', $bookmark->getAuthor());
-            $statment->bindValue(':dateAdded', $bookmark->getDateAdded()->format(Bookmark::DATE_FORMAT));
+            $statment->bindValue(
+                ':dateAdded',
+                $bookmark->getDateAdded()
+                    ? $bookmark->getDateAdded()->format(Bookmark::DATE_FORMAT)
+                    : null
+            );    
 
             $statment->execute();
 

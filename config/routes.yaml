@@ -2,6 +2,12 @@ healthcheck:
     path: /healthcheck
     controller: App\Infrastructure\HealthCheck\HealthCheckController
 
-bookmarks:
+list-bookmarks:
     path: /bookmarks
     controller: App\Infrastructure\Bookmark\BookmarkController::list
+    methods: GET
+
+add-bookmark:
+    path: /bookmarks
+    controller: App\Infrastructure\Bookmark\BookmarkController::add
+    methods: PUT
