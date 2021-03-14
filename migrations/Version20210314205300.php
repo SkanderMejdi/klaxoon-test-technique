@@ -14,7 +14,7 @@ final class Version20210314205300 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'Add Metadata table for video and image infos';
     }
 
     public function up(Schema $schema) : void
@@ -28,7 +28,7 @@ final class Version20210314205300 extends AbstractMigration
                 duration INT DEFAULT NULL,
                 CONSTRAINT fk_bookmark
                     FOREIGN KEY(bookmark_id) 
-                        REFERENCES bookmark(id)
+                        REFERENCES bookmark(id) ON DELETE CASCADE
             )'
         );
     }

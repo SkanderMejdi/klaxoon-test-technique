@@ -6,7 +6,13 @@ Feature:
         When I list all bookmarks
         Then I have a list of 5 bookmarks
     
-    Scenario:
+    Scenario: I add a bookmark
         When I add a bookmark
         And I list all bookmarks
         Then I have a list of 1 bookmark
+
+    Scenario: I add a bookmark
+        When I add a bookmark
+        And I delete this bookmark
+        And I list all bookmarks
+        Then I have a list of 0 bookmark

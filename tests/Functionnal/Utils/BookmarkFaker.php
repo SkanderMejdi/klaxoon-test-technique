@@ -29,6 +29,7 @@ final class BookmarkFaker
         $faker = Factory::create();
 
         return Bookmark::fromArray([
+            'id' => $this->faker->randomNumber(),
             'url' => $this->faker->url(),
             'title' => $this->faker->text(),
             'author' => $this->faker->name(),

@@ -36,4 +36,13 @@ class BookmarkController extends AbstractController
 
         return $this->json(['success' => 'true']);
     }
+
+    public function delete(Request $request): Response
+    {
+        $this->bookmarkRepository->delete(
+            $request->request->get('id')
+        );
+
+        return $this->json(['success' => 'true']);
+    }
 }

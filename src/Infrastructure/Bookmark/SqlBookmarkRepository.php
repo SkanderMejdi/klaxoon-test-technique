@@ -75,4 +75,15 @@ class SqlBookmarkRepository implements BookmarkRepository
 
         $statment->execute();
     }
+
+    public function delete(int $id): void
+    {
+        $deleteBookmark = <<<SQL
+            DELETE FROM public.bookmark WHERE id = :id;
+        SQL;
+
+        $statment = $this->connection->prepare($deleteBookmark);
+        $statment->bindValue(':id', $id);
+        $statment->execute();
+    }
 }
