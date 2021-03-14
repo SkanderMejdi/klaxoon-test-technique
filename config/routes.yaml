@@ -13,6 +13,15 @@ add-bookmark:
     methods: PUT
 
 delete-bookmark:
-    path: /bookmarks
+    path: /bookmarks/{id}
     controller: App\Infrastructure\Bookmark\BookmarkController::delete
     methods: DELETE
+    requirements:
+        id: '\d+'
+
+edit-bookmark:
+    path: /bookmarks/{id}
+    controller: App\Infrastructure\Bookmark\BookmarkController::edit
+    methods: POST
+    requirements:
+        id: '\d+'

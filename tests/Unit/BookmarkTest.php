@@ -16,6 +16,7 @@ final class BookmarkTest extends TestCase
     private const AUTHOR = 'Pierre Metivier';
     private const DATE_ADDED = '2018-10-11 00:00:00';
     private const TYPE = 'image';
+    private const KEY_WORDS = 'klaxoon super top bien';
 
     public function testCanBeCreatedFromUrl(): void
     {
@@ -41,6 +42,7 @@ final class BookmarkTest extends TestCase
             'date_added' => self::DATE_ADDED,
             'width' => self::WIDHT,
             'height' => self::HEIGHT,
+            'key_words' => self::KEY_WORDS,
         ];
 
         $bookmark = Bookmark::fromArray($array);
@@ -55,6 +57,7 @@ final class BookmarkTest extends TestCase
             $bookmark->getDateAdded()
         );
         $this->assertInstanceOf(ImageMetadata::class, $bookmark->getMetadata());
+        $this->assertEquals(self::KEY_WORDS, $bookmark->getKeyWords());
     }
 
     public function testCanBeSerialized(): void
@@ -73,7 +76,8 @@ final class BookmarkTest extends TestCase
                 'type' => self::TYPE,
                 'height' => self::HEIGHT,
                 'width' => self::WIDHT,
-            ]
+            ],
+            'key_words' => null,
         ], $serializedBookmark);
     }
 }

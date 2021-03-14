@@ -5,6 +5,7 @@
 ```shell
 $ make build # Build docker image
 $ make init # Create default env file
+$ make database # Create tables
 ```
 
 Add to your `/etc/hosts` file the following line
