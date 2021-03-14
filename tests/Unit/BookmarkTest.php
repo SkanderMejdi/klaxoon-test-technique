@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 final class BookmarkTest extends TestCase
 {
+    private const ID = 1;
     private const URL = 'https://flic.kr/p/2d5pio1';
     private const WIDHT = 1024;
     private const HEIGHT = 682;
@@ -21,6 +22,7 @@ final class BookmarkTest extends TestCase
         $bookmark = Bookmark::fromUrl(self::URL);
 
         $this->assertInstanceOf(Bookmark::class, $bookmark);
+        $this->assertNull($bookmark->getId());
         $this->assertEquals(self::URL, $bookmark->getUrl());
         $this->assertEquals(self::TITLE, $bookmark->getTitle());
         $this->assertEquals(self::AUTHOR, $bookmark->getAuthor());
@@ -32,6 +34,7 @@ final class BookmarkTest extends TestCase
     public function testCanBeCreatedArray(): void
     {
         $array = [
+            'id' => self::ID,
             'url' => self::URL,
             'title' => self::TITLE,
             'author' => self::AUTHOR,
@@ -43,6 +46,7 @@ final class BookmarkTest extends TestCase
         $bookmark = Bookmark::fromArray($array);
 
         $this->assertInstanceOf(Bookmark::class, $bookmark);
+        $this->assertEquals(self::ID, $bookmark->getId());
         $this->assertEquals(self::URL, $bookmark->getUrl());
         $this->assertEquals(self::TITLE, $bookmark->getTitle());
         $this->assertEquals(self::AUTHOR, $bookmark->getAuthor());
@@ -60,6 +64,7 @@ final class BookmarkTest extends TestCase
 
         $this->assertIsArray($serializedBookmark);
         $this->assertSame([
+            'id' => null,
             'url' => self::URL,
             'title' => self::TITLE,
             'author' => self::AUTHOR,

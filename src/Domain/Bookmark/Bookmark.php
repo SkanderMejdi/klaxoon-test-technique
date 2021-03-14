@@ -7,12 +7,13 @@ use App\Domain\Metadata\Metadata;
 use App\Domain\Metadata\VideoMetadata;
 use App\Domain\Serializable;
 use Embed\Embed;
-use Embed\Extractor;
 
 final class Bookmark implements Serializable
 {
     public const DATE_FORMAT = 'Y-m-d H:i:s';
     private const UNKNOWN_PROVIDER = "Unknown provider";
+
+    private ?int $id;
 
     private string $url;
 
@@ -25,12 +26,14 @@ final class Bookmark implements Serializable
     private Metadata $metadata;
 
     private function __construct(
+        ?int $id,
         string $url,
         ?string $title,
         ?string $author,
         ?\DateTime $dateTime,
         Metadata $metadata
     ) {
+        $this->id = $id;
         $this->url = $url;
         $this->title = $title;
         $this->author = $author;
@@ -55,6 +58,7 @@ final class Bookmark implements Serializable
         }
 
         return new Bookmark(
+            null,
             (string) $embedExtractor->getRequest()->getUri(),
             $embedExtractor->title,
             $embedExtractor->authorName,
@@ -70,6 +74,7 @@ final class Bookmark implements Serializable
             : VideoMetadata::fromArray($array);
 
         return new Bookmark(
+            $array['id'],
             $array['url'],
             $array['title'],
             $array['author'],
@@ -79,6 +84,11 @@ final class Bookmark implements Serializable
             ) : null,
             $metadata
         );
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getUrl(): string
@@ -109,6 +119,7 @@ final class Bookmark implements Serializable
     public function serialize(): array
     {
         return [
+            'id' => $this->id,
             'url' => $this->url,
             'title' => $this->title,
             'author' => $this->author,
