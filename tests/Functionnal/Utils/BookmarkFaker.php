@@ -39,14 +39,15 @@ final class BookmarkFaker
             'width' => $this->faker->randomNumber(),
             'height' => $this->faker->randomNumber(),
             'duration' => $this->faker->boolean() ? $this->faker->randomNumber() : null,
+            'key_words' => $this->faker->boolean() ? $this->faker->text() : null,
         ]);
     }
 
     public function insertRandomBookmarks(int $count = 5): void
     {
         $insertBookmark = <<<SQL
-            INSERT INTO public.bookmark (url, title, author, date_added)
-            VALUES (:url, :title, :author, :dateAdded);
+            INSERT INTO public.bookmark (url, title, author, date_added, key_words)
+            VALUES (:url, :title, :author, :dateAdded, :keyWords);
         SQL;
 
         $insertMetadata = <<<SQL
@@ -66,7 +67,8 @@ final class BookmarkFaker
                 $bookmark->getDateAdded()
                     ? $bookmark->getDateAdded()->format(Bookmark::DATE_FORMAT)
                     : null
-            );    
+            );
+            $statment->bindValue(':keyWords', $bookmark->getKeyWords());
 
             $statment->execute();
 

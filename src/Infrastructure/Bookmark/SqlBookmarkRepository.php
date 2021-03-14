@@ -86,4 +86,18 @@ class SqlBookmarkRepository implements BookmarkRepository
         $statment->bindValue(':id', $id);
         $statment->execute();
     }
+
+    public function edit(int $id, string $keyWords): void
+    {
+        $editBookmark = <<<SQL
+            UPDATE public.bookmark
+            SET key_words = :keyWords
+            WHERE id = :id;
+        SQL;
+
+        $statment = $this->connection->prepare($editBookmark);
+        $statment->bindValue(':id', $id);
+        $statment->bindValue(':keyWords', $keyWords);
+        $statment->execute();
+    }
 }

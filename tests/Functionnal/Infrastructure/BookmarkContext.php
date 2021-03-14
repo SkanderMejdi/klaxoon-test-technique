@@ -13,9 +13,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 final class BookmarkContext implements Context
 {
-    private const LIST_PATH = '/bookmarks';
+    private const PATH = '/bookmarks';
     private const VALID_VIDEO_URL = 'https://vimeo.com/503859030';
     private const BOOKMARK_ID = 1;
+    private const KEY_WORDS = 'klaxoon trop bien';
 
     private ?Response $response;
 
@@ -53,7 +54,7 @@ final class BookmarkContext implements Context
     public function whenIListAllBookmarks(): void
     {
         $this->response = $this->kernel->handle(
-            Request::create(self::LIST_PATH, 'GET')
+            Request::create(self::PATH, 'GET')
         );
     }
 
@@ -74,7 +75,7 @@ final class BookmarkContext implements Context
     public function whenIAddABookmark(): void
     {
         $this->response = $this->kernel->handle(
-            Request::create(self::LIST_PATH, 'PUT', [
+            Request::create(self::PATH, 'PUT', [
                 'url' => self::VALID_VIDEO_URL,
             ])
         );
@@ -86,9 +87,34 @@ final class BookmarkContext implements Context
     public function whenIDeleteThisBookmark(): void
     {
         $this->response = $this->kernel->handle(
-            Request::create(self::LIST_PATH, 'DELETE', [
+            Request::create(self::PATH, 'DELETE', [
                 'id' => self::BOOKMARK_ID,
             ])
         );
+    }
+
+    /**
+     * @When I edit bookmark
+     */
+    public function whenIEditBookmark(): void
+    {
+        $this->response = $this->kernel->handle(
+            Request::create(self::PATH, 'POST', [
+                'id' => self::BOOKMARK_ID,
+                'key_words' => self::KEY_WORDS,
+            ])
+        );
+    }
+
+    /**
+     * @Then I have my edited bookmark
+     */
+    public function thenIHaveMyEditedBookmark(): void
+    {
+        $decodedResponse = \json_decode($this->response->getContent());
+        Assert::notEmpty($decodedResponse);
+        
+        $bookmark = $decodedResponse->bookmarks[0];
+        Assert::eq($bookmark->key_words, self::KEY_WORDS);
     }
 }

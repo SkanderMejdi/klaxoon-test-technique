@@ -16,3 +16,8 @@ delete-bookmark:
     path: /bookmarks
     controller: App\Infrastructure\Bookmark\BookmarkController::delete
     methods: DELETE
+
+deit-bookmark:
+    path: /bookmarks
+    controller: App\Infrastructure\Bookmark\BookmarkController::edit
+    methods: POST

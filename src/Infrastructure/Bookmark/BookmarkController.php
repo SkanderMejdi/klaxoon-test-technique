@@ -45,4 +45,14 @@ class BookmarkController extends AbstractController
 
         return $this->json(['success' => 'true']);
     }
+
+    public function edit(Request $request): Response
+    {
+        $this->bookmarkRepository->edit(
+            $request->request->get('id'),
+            $request->request->get('key_words')
+        );
+
+        return $this->json(['success' => 'true']);
+    }
 }

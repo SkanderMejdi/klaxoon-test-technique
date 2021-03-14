@@ -24,6 +24,8 @@ final class Bookmark implements Serializable
     private ?\DateTime $dateAdded;
 
     private Metadata $metadata;
+    
+    private ?string $keyWords;
 
     private function __construct(
         ?int $id,
@@ -31,7 +33,8 @@ final class Bookmark implements Serializable
         ?string $title,
         ?string $author,
         ?\DateTime $dateTime,
-        Metadata $metadata
+        Metadata $metadata,
+        ?string $keyWords = null
     ) {
         $this->id = $id;
         $this->url = $url;
@@ -39,6 +42,7 @@ final class Bookmark implements Serializable
         $this->author = $author;
         $this->dateAdded = $dateTime;
         $this->metadata = $metadata;
+        $this->keyWords = $keyWords;
     }
 
     static public function fromUrl(string $url): self
@@ -82,7 +86,8 @@ final class Bookmark implements Serializable
             ? \DateTime::createFromFormat(
                 self::DATE_FORMAT, $array['date_added']
             ) : null,
-            $metadata
+            $metadata,
+            $array['key_words']
         );
     }
 
@@ -116,6 +121,11 @@ final class Bookmark implements Serializable
         return $this->metadata;
     }
 
+    public function getKeyWords(): ?string
+    {
+        return $this->keyWords;
+    }
+
     public function serialize(): array
     {
         return [
@@ -129,7 +139,8 @@ final class Bookmark implements Serializable
             'metadata' => array_merge(
                 ['type' => $this->metadata->getType()],
                 $this->metadata->serialize()
-            )
+            ),
+            'key_words' => $this->keyWords,
         ];
     }
 }
