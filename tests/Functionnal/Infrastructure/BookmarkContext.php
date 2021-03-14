@@ -87,9 +87,7 @@ final class BookmarkContext implements Context
     public function whenIDeleteThisBookmark(): void
     {
         $this->response = $this->kernel->handle(
-            Request::create(self::PATH, 'DELETE', [
-                'id' => self::BOOKMARK_ID,
-            ])
+            Request::create(self::PATH . '/' . self::BOOKMARK_ID, 'DELETE')
         );
     }
 
@@ -99,8 +97,7 @@ final class BookmarkContext implements Context
     public function whenIEditBookmark(): void
     {
         $this->response = $this->kernel->handle(
-            Request::create(self::PATH, 'POST', [
-                'id' => self::BOOKMARK_ID,
+            Request::create(self::PATH . '/' . self::BOOKMARK_ID, 'POST', [
                 'key_words' => self::KEY_WORDS,
             ])
         );
