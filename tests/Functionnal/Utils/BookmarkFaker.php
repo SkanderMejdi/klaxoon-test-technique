@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Functionnal\Utils;
 
 use App\Domain\Bookmark\Bookmark;
+use App\Domain\Metadata\VideoMetadata;
 use Doctrine\DBAL\Connection;
 use Faker\Factory;
 use Faker\Generator;
+
+use function PHPUnit\Framework\isType;
 
 final class BookmarkFaker
 {
@@ -30,24 +33,50 @@ final class BookmarkFaker
             'title' => $this->faker->text(),
             'author' => $this->faker->name(),
             'date_added' => $this->faker->dateTime()->format(Bookmark::DATE_FORMAT),
+            'width' => $this->faker->randomNumber(),
+            'height' => $this->faker->randomNumber(),
+            'duration' => $this->faker->boolean() ? $this->faker->randomNumber() : null,
         ]);
     }
 
     public function insertRandomBookmarks(int $count = 5): void
     {
-        $insert = <<<SQL
+        $insertBookmark = <<<SQL
             INSERT INTO public.bookmark (url, title, author, date_added)
             VALUES (:url, :title, :author, :dateAdded);
+        SQL;
+
+        $insertMetadata = <<<SQL
+            INSERT INTO public.metadata (bookmark_id, width, height, duration)
+            VALUES (:bookmarkId, :width, :height, :duration);
         SQL;
 
         for ($i = 0; $i < $count; $i++) {
             $bookmark = $this->aBookmark();
 
-            $statment = $this->connection->prepare($insert);
+            $statment = $this->connection->prepare($insertBookmark);
             $statment->bindValue(':url', $bookmark->getUrl());
             $statment->bindValue(':title', $bookmark->getTitle());
             $statment->bindValue(':author', $bookmark->getAuthor());
             $statment->bindValue(':dateAdded', $bookmark->getDateAdded()->format(Bookmark::DATE_FORMAT));
+
+            $statment->execute();
+
+            $lastId = $this->connection->lastInsertId();
+
+            $statment = $this->connection->prepare($insertMetadata);
+            $statment->bindValue(':bookmarkId', $lastId);
+
+            $metadata = $bookmark->getMetadata();
+            if ($metadata->getType() === VideoMetadata::TYPE) {
+                /** @var VideoMatadata $metadata */
+                $statment->bindValue(':duration', $metadata->getDuration());
+            } else {
+                /** @var ImageMatadata $metadata */
+                $statment->bindValue(':duration', null);
+            }
+            $statment->bindValue(':width', $metadata->getWidht());
+            $statment->bindValue(':height', $metadata->getHeight());
 
             $statment->execute();
         }
