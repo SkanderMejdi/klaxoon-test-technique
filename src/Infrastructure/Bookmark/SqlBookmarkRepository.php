@@ -19,10 +19,11 @@ class SqlBookmarkRepository implements BookmarkRepository
     public function list(): array
     {
         $sql = <<<SQL
-            SELECT * FROM public.bookmark;
+            SELECT * FROM public.bookmark
+            JOIN public.metadata ON bookmark.id = metadata.bookmark_id;
         SQL;
 
-        $results = $this->connection->fetchAll($sql);
+        $results = $this->connection->fetchAllAssociative($sql);
 
         return !empty($results)
         ? array_map(static function(array $result) {

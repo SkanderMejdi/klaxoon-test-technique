@@ -1,7 +1,7 @@
 ID_USER = $(shell id -u)
 ID_GROUP = $(shell id -g)
 TARGET_TEST := klaxoon-api:dev
-PHP_EXEC := docker-compose exec -T --user $(ID_USER):$(ID_GROUP) php
+PHP_EXEC = ID_USER=$(ID_USER) ID_GROUP=$(ID_GROUP) docker-compose run --rm --user $(ID_USER):$(ID_GROUP) php
  
 build:
 	docker build -t $(TARGET_TEST) --target dev .
