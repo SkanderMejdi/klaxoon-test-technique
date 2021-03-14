@@ -15,6 +15,7 @@ final class BookmarkContext implements Context
 {
     private const LIST_PATH = '/bookmarks';
     private const VALID_VIDEO_URL = 'https://vimeo.com/503859030';
+    private const BOOKMARK_ID = 1;
 
     private ?Response $response;
 
@@ -75,6 +76,18 @@ final class BookmarkContext implements Context
         $this->response = $this->kernel->handle(
             Request::create(self::LIST_PATH, 'PUT', [
                 'url' => self::VALID_VIDEO_URL,
+            ])
+        );
+    }
+
+    /**
+     * @When I delete this bookmark
+     */
+    public function whenIDeleteThisBookmark(): void
+    {
+        $this->response = $this->kernel->handle(
+            Request::create(self::LIST_PATH, 'DELETE', [
+                'id' => self::BOOKMARK_ID,
             ])
         );
     }

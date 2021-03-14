@@ -8,4 +8,6 @@ interface BookmarkRepository
     public function list(): array;
 
     public function add(Bookmark $bookmark): void;
+
+    public function delete(int $id): void;
 }

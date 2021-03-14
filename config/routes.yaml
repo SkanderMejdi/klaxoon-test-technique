@@ -11,3 +11,8 @@ add-bookmark:
     path: /bookmarks
     controller: App\Infrastructure\Bookmark\BookmarkController::add
     methods: PUT
+
+delete-bookmark:
+    path: /bookmarks
+    controller: App\Infrastructure\Bookmark\BookmarkController::delete
+    methods: DELETE
