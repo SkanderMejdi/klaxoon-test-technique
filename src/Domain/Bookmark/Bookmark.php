@@ -6,6 +6,7 @@ use App\Domain\Metadata\ImageMetadata;
 use App\Domain\Metadata\Metadata;
 use App\Domain\Metadata\VideoMetadata;
 use App\Domain\Serializable;
+use Embed\Embed;
 use Embed\Extractor;
 
 final class Bookmark implements Serializable
@@ -37,24 +38,27 @@ final class Bookmark implements Serializable
         $this->metadata = $metadata;
     }
 
-    static public function fromEmbedExtractor(Extractor $embed): self
+    static public function fromUrl(string $url): self
     {
-        switch ($embed->getOEmbed()->get('provider_name')) {
+        $embed = new Embed();
+        $embedExtractor = $embed->get($url);
+
+        switch ($embedExtractor->getOEmbed()->get('provider_name')) {
             case ImageMetadata::PROVIDER:
-                $metadata = ImageMetadata::fromEmbedExtractor($embed);
+                $metadata = ImageMetadata::fromEmbedExtractor($embedExtractor);
                 break;
             case VideoMetadata::PROVIDER:
-                $metadata = VideoMetadata::fromEmbedExtractor($embed);
+                $metadata = VideoMetadata::fromEmbedExtractor($embedExtractor);
                 break;
             default:
                 throw new \Exception(self::UNKNOWN_PROVIDER);
         }
 
         return new Bookmark(
-            (string) $embed->getRequest()->getUri(),
-            $embed->title,
-            $embed->authorName,
-            $embed->publishedTime,
+            (string) $embedExtractor->getRequest()->getUri(),
+            $embedExtractor->title,
+            $embedExtractor->authorName,
+            $embedExtractor->publishedTime,
             $metadata
         );
     }

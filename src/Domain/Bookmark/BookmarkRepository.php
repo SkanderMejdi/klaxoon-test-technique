@@ -6,4 +6,6 @@ interface BookmarkRepository
 {
     /** @return BookMark[] */
     public function list(): array;
+
+    public function add(Bookmark $bookmark): void;
 }

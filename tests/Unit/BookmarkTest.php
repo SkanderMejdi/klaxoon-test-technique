@@ -4,7 +4,6 @@ namespace App\Tests\Unit;
 
 use App\Domain\Bookmark\Bookmark;
 use App\Domain\Metadata\ImageMetadata;
-use Embed\Embed;
 use PHPUnit\Framework\TestCase;
 
 final class BookmarkTest extends TestCase
@@ -17,12 +16,9 @@ final class BookmarkTest extends TestCase
     private const DATE_ADDED = '2018-10-11 00:00:00';
     private const TYPE = 'image';
 
-    public function testCanBeCreatedFromEmbedExtractor(): void
+    public function testCanBeCreatedFromUrl(): void
     {
-        $embed = new Embed();
-        $embedExtractor = $embed->get(self::URL);
-
-        $bookmark = Bookmark::fromEmbedExtractor($embedExtractor);
+        $bookmark = Bookmark::fromUrl(self::URL);
 
         $this->assertInstanceOf(Bookmark::class, $bookmark);
         $this->assertEquals(self::URL, $bookmark->getUrl());
@@ -59,10 +55,7 @@ final class BookmarkTest extends TestCase
 
     public function testCanBeSerialized(): void
     {
-        $embed = new Embed();
-        $embedExtractor = $embed->get(self::URL);
-
-        $bookmark = Bookmark::fromEmbedExtractor($embedExtractor);
+        $bookmark = Bookmark::fromUrl(self::URL);
         $serializedBookmark = $bookmark->serialize();
 
         $this->assertIsArray($serializedBookmark);

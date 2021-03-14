@@ -13,7 +13,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 final class BookmarkContext implements Context
 {
-    const LIST_PATH = '/bookmarks';
+    private const LIST_PATH = '/bookmarks';
+    private const VALID_VIDEO_URL = 'https://vimeo.com/503859030';
 
     private ?Response $response;
 
@@ -38,11 +39,11 @@ final class BookmarkContext implements Context
     }
 
     /**
-     * @Given some bookmarks
+     * @Given :count bookmarks
      */
-    public function givenSomeBookmarks(): void
+    public function givenSomeBookmarks(int $count): void
     {
-        $this->bookmarkFaker->insertRandomBookmarks(5);
+        $this->bookmarkFaker->insertRandomBookmarks($count);
     }
 
     /**
@@ -56,12 +57,25 @@ final class BookmarkContext implements Context
     }
 
     /**
-     * @Then I have a list of all bookmarks
+     * @Then I have a list of :count bookmarks
+     * @Then I have a list of :count bookmark
      */
-    public function thenIHaveaListOAllBookmarks(): void
+    public function thenIHaveaListOAllBookmarks(int $count): void
     {
         $decodedResponse = \json_decode($this->response->getContent());
         Assert::notEmpty($decodedResponse);
-        Assert::count($decodedResponse->bookmarks, 5);
+        Assert::count($decodedResponse->bookmarks, $count);
+    }
+
+    /**
+     * @When I add a bookmark
+     */
+    public function whenIAddABookmark(): void
+    {
+        $this->response = $this->kernel->handle(
+            Request::create(self::LIST_PATH, 'PUT', [
+                'url' => self::VALID_VIDEO_URL,
+            ])
+        );
     }
 }
